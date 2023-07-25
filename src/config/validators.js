@@ -42,3 +42,39 @@ export const addCategoriesValidator = [
     .withMessage("El nombre es requerido")
     .isLength({ min: 1 }),
 ];
+
+export const userRegisterValidator = [
+  body("username")
+    .exists()
+    .withMessage("El nombre es requerido.")
+    .isLength({ min: 1 })
+    .withMessage("El nombre es requerido."),
+  body("password")
+    .exists()
+    .withMessage("La contraseña es requerido.")
+    .isLength({ min: 1 })
+    .withMessage("La contraseña es requerida."),
+  body("correo")
+    .exists()
+    .withMessage("El correo es requerido.")
+    .isEmail()
+    .withMessage("Ingrese un correo valido."),
+];
+
+export const userLoginValidator = [
+  body("username")
+    .notEmpty()
+    .withMessage("El nombre de usuario es obligatorio.")
+    .isString()
+    .withMessage("El nombre de usuario debe ser una cadena de texto.")
+    .isEmail()
+    .withMessage(
+      "El nombre de usuario debe ser una dirección de correo electrónico válida."
+    ),
+
+  body("password")
+    .notEmpty()
+    .withMessage("La contraseña es obligatoria.")
+    .isString()
+    .withMessage("La contraseña debe ser una cadena de texto."),
+];
