@@ -10,6 +10,8 @@ import sequelize, {
   ProductsCategories,
   User,
   UserData,
+  UserRole,
+  UserRoleJoin,
 } from "./src/config/database.js";
 import socketIoService from "./src/config/socket-io.js";
 import productRoutes from "./src/routes/productRoutes.js";
@@ -17,6 +19,10 @@ import categoriesRoutes from "./src/routes/categoriesRoutes.js";
 import LocalAuth from "./src/config/passport.js";
 import authRoutes from "./src/routes/authRoutes.js";
 import session from "express-session";
+import {
+  guestPermissions,
+  superAdminPermissions,
+} from "./src/config/server-config.js";
 config({ path: "./.env" });
 
 const app = express();
@@ -81,24 +87,82 @@ passport.deserializeUser(function (user, cb) {
 const { PORT } = process.env;
 
 //-----start------------------------------------------------------
-async function initializeServer(user, userdata, products, categories, pcat) {
-  await sequelize.authenticate();
-  console.log("La base de datos funciona correctamente.");
+async function initializeServer() {
+  const syncUser = true;
+  const syncUserData = true;
+  const syncProducts = true;
+  const syncCategories = true;
+  const syncProductsCategories = true;
+  const syncUserRole = true;
+  const syncUserRoleJoin = true;
 
-  await User.sync({ force: user });
-  console.log(`Tabla: User -> sincronizada. Force: ${user}`);
+  try {
+    await sequelize.authenticate();
+    console.log("La base de datos funciona correctamente.");
 
-  await UserData.sync({ force: userdata });
-  console.log(`Tabla: UserData -> sincronizada. Force: ${user}`);
+    if (syncUser) {
+      await User.sync({ force: true });
+      console.log(`Tabla: User -> sincronizada. Force: ${syncUser}`);
+    }
 
-  await Products.sync({ force: userdata });
-  console.log(`Tabla: Products -> sincronizada. Force: ${products}`);
+    if (syncUserData) {
+      await UserData.sync({ force: true });
+      console.log(`Tabla: UserData -> sincronizada. Force: ${syncUserData}`);
+    }
 
-  await Categories.sync({ force: userdata });
-  console.log(`Tabla: Categories -> sincronizada. Force: ${categories}`);
+    if (syncProducts) {
+      await Products.sync({ force: true });
+      console.log(`Tabla: Products -> sincronizada. Force: ${syncProducts}`);
+    }
 
-  await ProductsCategories.sync({ force: pcat });
-  console.log(`Tabla:  ProductsCategories -> sincronizada. Force: ${pcat}`);
+    if (syncCategories) {
+      await Categories.sync({ force: true });
+      console.log(
+        `Tabla: Categories -> sincronizada. Force: ${syncCategories}`
+      );
+    }
+
+    if (syncProductsCategories) {
+      await ProductsCategories.sync({ force: true });
+      console.log(
+        `Tabla: ProductsCategories -> sincronizada. Force: ${syncProductsCategories}`
+      );
+    }
+
+    if (syncUserRole) {
+      await UserRole.sync({ force: true });
+      console.log(`Tabla: UserRole -> sincronizada. Force: ${syncUserRole}`);
+
+      await UserRole.create({
+        name: "guest",
+        permissions: guestPermissions.getPermissions(),
+      });
+
+      if (syncUserRoleJoin) {
+        await UserRoleJoin.sync({ force: true });
+      }
+
+      //admin
+
+      await UserRole.create({
+        name: "superadmin",
+        permissions: superAdminPermissions.getPermissions(),
+      });
+    }
+    const adminData = await UserData.create();
+    const admin = await User.create({
+      nombre: "Admin",
+      contraseña: "Aezakmi11",
+      correo: "developer.basilorien@gmail.com",
+    });
+
+    const adminRole = await UserRole.findOne({ where: { id: 2 } });
+    await admin.setUserRole(adminRole);
+    await adminData.setUser(admin);
+    console.log("bienvenido admin");
+  } catch (error) {
+    console.error("Error al sincronizar las tablas:", error);
+  }
 }
 
 io.on("connect", function (socket) {
@@ -108,10 +172,20 @@ io.on("connect", function (socket) {
 app.get("/", function (req, res) {
   return res.json(req.isAuthenticated());
 });
+
+app.get("/debug/all_users", async function (req, res) {
+  const result = await User.findAll({
+    include: [UserData, UserRole],
+  });
+
+  return res.json(result);
+});
+
+
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoriesRoutes);
 
-initializeServer(false, false, true, true, true).then(function () {
+initializeServer(true, true, true, true, true, true).then(function () {
   httpServer.listen(PORT, console.log(`Server running on port ${PORT}`));
 });

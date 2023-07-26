@@ -5,6 +5,8 @@ import CreateUserdataModel from "../models/User-Data.js";
 import CreateProductsModel from "../models/Products.js";
 import CreateCategoriesModel from "../models/Category.js";
 import ProductsCategoriesModel from "../models/ProductsCategories.js";
+import CreateUserRolesModel from "../models/User-Roles.js";
+import CreateUserRoleJoin from "../models/User-Role-Join.js";
 config();
 
 const { SESSION_SECRET, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } =
@@ -21,17 +23,29 @@ const sequelize = new Sequelize({
 CreateUserModel(sequelize);
 CreateUserdataModel(sequelize);
 CreateProductsModel(sequelize);
-CreateCategoriesModel(sequelize)
-ProductsCategoriesModel(sequelize)
+CreateCategoriesModel(sequelize);
+ProductsCategoriesModel(sequelize);
+CreateUserRolesModel(sequelize);
+CreateUserRoleJoin(sequelize);
 
-
-export const { User, UserData, Products, Categories, ProductsCategories } = sequelize.models;
-console.log(sequelize.models)
+export const {
+  User,
+  UserData,
+  Products,
+  Categories,
+  ProductsCategories,
+  UserRole,
+  UserRoleJoin,
+} = sequelize.models;
 
 UserData.belongsTo(User);
 User.hasOne(UserData);
-Products.belongsToMany(Categories, {through: "ProductsCategories"})
-Categories.belongsToMany(Products, {through: "ProductsCategories"})
-
+Products.belongsToMany(Categories, { through: "ProductsCategories" });
+Categories.belongsToMany(Products, { through: "ProductsCategories" });
+User.hasOne(UserRole);
+UserRole.belongsToMany(User, {
+  foreignKey: "UserRoleId",
+  through: "UserRoleJoin",
+});
 
 export default sequelize;

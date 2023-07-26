@@ -1,7 +1,7 @@
 import passport from "passport";
 import { httpResponse } from "../config/server-config.js";
 import { validationResult } from "express-validator";
-import { User, UserData } from "../config/database.js";
+import { User, UserData, UserRole } from "../config/database.js";
 import { Op } from "sequelize";
 
 export async function userRegister(req, res, next) {
@@ -28,6 +28,12 @@ export async function userRegister(req, res, next) {
     if (alrExists) {
       return res.json(httpResponse(false, null, "El usuario ya existe."));
     }
+    const newUserRole = await UserRole.findOne({
+      where: {
+        id: 1,
+        name: "guest",
+      },
+    });
 
     const newUserdata = await UserData.create();
     const newUser = await User.create({
@@ -36,10 +42,11 @@ export async function userRegister(req, res, next) {
       correo,
     });
 
-    if (!newUser || !newUserdata) {
+    if (!newUser || !newUserdata || !newUserRole) {
       throw new Error("Error al registrar usuario.");
     }
     await newUserdata.setUser(newUser);
+    await newUser.setUserRole(newUserRole);
 
     return res.json(httpResponse(true, "Registro exitoso"));
   } catch (error) {
