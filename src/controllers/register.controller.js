@@ -75,7 +75,7 @@ export function userLogin(req, res, next) {
 export function loginResult(req, res) {
   try {
     if (!req.isAuthenticated()) {
-      return res.json(
+      return res.status(401).json(
         httpResponse(false, null, "Usuario o contraseña incorrectos.")
       );
     }

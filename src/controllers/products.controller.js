@@ -50,7 +50,7 @@ export async function createProduct(req, res, next) {
 
     if (!productCategory) {
       return res
-        .status(400)
+        .status(409)
         .json(httpResponse(false, null, "La categoria solicitada no existe."));
     }
 

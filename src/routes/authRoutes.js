@@ -27,9 +27,13 @@ authRoutes.post(
   isNotAuthenticated,
   userLoginValidator,
   userLogin,
-  passport.authenticate("local", {}),
-  loginResult
+  passport.authenticate("local", {
+    successRedirect: "/auth/loginresult",
+    failureRedirect: "/auth/loginresult",
+  })
 );
+
+authRoutes.get("/loginresult", loginResult);
 authRoutes.get("/logout", isAuthenticated, logout);
 
 export default authRoutes;
