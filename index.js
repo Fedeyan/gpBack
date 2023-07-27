@@ -88,13 +88,13 @@ const { PORT } = process.env;
 
 //-----start------------------------------------------------------
 async function initializeServer() {
-  const syncUser = true;
-  const syncUserData = true;
-  const syncProducts = true;
-  const syncCategories = true;
-  const syncProductsCategories = true;
-  const syncUserRole = true;
-  const syncUserRoleJoin = true;
+  const syncUser = false;
+  const syncUserData = false;
+  const syncProducts = false;
+  const syncCategories = false;
+  const syncProductsCategories = false;
+  const syncUserRole = false;
+  const syncUserRoleJoin = false;
 
   try {
     await sequelize.authenticate();

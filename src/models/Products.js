@@ -19,6 +19,10 @@ const CreateProductsModel = (sequelize) => {
     imagen: {
       type: DataTypes.STRING,
     },
+    stock: {
+      type: DataTypes.FLOAT,
+      defaultValue: 0,
+    },
   });
   return Products;
 };

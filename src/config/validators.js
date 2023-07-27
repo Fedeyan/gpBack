@@ -6,6 +6,11 @@ export const addProductValidator = [
     .withMessage("El código es requerido.")
     .isNumeric()
     .withMessage("El código debe ser de tipo numérico"),
+  body("stock")
+    .exists()
+    .withMessage("El stock es requerido.")
+    .isNumeric()
+    .withMessage("El código debe ser de tipo numérico"),
   body("nombre")
     .exists()
     .withMessage("El nombre es requerido.")

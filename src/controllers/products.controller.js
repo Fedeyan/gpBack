@@ -3,7 +3,7 @@ import { Categories, Products } from "../config/database.js";
 import { httpResponse } from "../config/server-config.js";
 
 export async function createProduct(req, res, next) {
-  const { code, nombre, marca, modelo, categoria } = req.body;
+  const { code, nombre, marca, modelo, categoria, stock } = req.body;
   const imagen = req?.file?.path
   console.log(req.body)
   console.log(imagen)
@@ -59,7 +59,8 @@ export async function createProduct(req, res, next) {
       nombre,
       marca,
       modelo,
-      imagen: imagen
+      imagen: imagen,
+      stock
     });
 
     await newProduct.setCategories(productCategory);

@@ -13,6 +13,7 @@ import isAuthenticated, {
   isNotAuthenticated,
 } from "../middlewares/isAuthenticated.js";
 import passport from "passport";
+import { httpResponse } from "../config/server-config.js";
 
 const authRoutes = Router();
 
@@ -33,6 +34,13 @@ authRoutes.post(
   })
 );
 
+authRoutes.get("/isLogIn", function (req, res) {
+  if (req.isAuthenticated()) {
+    return res.json(httpResponse(true));
+  } else {
+    return res.json(httpResponse(false));
+  }
+});
 authRoutes.get("/loginresult", loginResult);
 authRoutes.get("/logout", isAuthenticated, logout);
 
