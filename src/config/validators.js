@@ -83,3 +83,16 @@ export const userLoginValidator = [
     .isString()
     .withMessage("La contraseña debe ser una cadena de texto."),
 ];
+
+export const orderValidator = [
+  body("product")
+    .exists()
+    .withMessage("El producto es requerido")
+    .isNumeric()
+    .withMessage("Se esperaban datos de tipo numérico"),
+  body("cant")
+    .exists()
+    .withMessage("la cantidad es requerida")
+    .isNumeric()
+    .withMessage("Se esperaban datos de tipo numérico"),
+];

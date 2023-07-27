@@ -93,9 +93,9 @@ async function initializeServer() {
   const syncUser = true;
 
   const syncUserData = true;
-  const syncProducts = true;
-  const syncCategories = true;
-  const syncProductsCategories = true;
+  const syncProducts = false;
+  const syncCategories = false;
+  const syncProductsCategories = false;
   const syncUserRole = true;
   const syncUserRoleJoin = true;
   const syncOrder = true;
