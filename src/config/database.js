@@ -18,14 +18,13 @@ const {
   DATABASE_NAME,
 } = process.env;
 
-const sequelize = new Sequelize({
-  port: DATABASE_PORT,
-  username: DATABASE_USER,
-  password: DATABASE_PASSWORD,
-  database: DATABASE_NAME,
-  dialect: "postgres",
-  logging: false,
-});
+const sequelize = new Sequelize(
+  "postgresql://postgres:N57Mx4eYrUjw0KaPmU7k@containers-us-west-36.railway.app:7333/railway",
+  {
+    dialect: "postgres",
+    logging: false,
+  }
+);
 
 CreateUserModel(sequelize);
 CreateUserdataModel(sequelize);
