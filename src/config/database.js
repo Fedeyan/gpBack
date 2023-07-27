@@ -10,10 +10,16 @@ import CreateUserRoleJoin from "../models/User-Role-Join.js";
 import CreateOrdersModel from "../models/Orders.js";
 config();
 
-const { SESSION_SECRET, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } =
-  process.env;
+const {
+  SESSION_SECRET,
+  DATABASE_PORT,
+  DATABASE_USER,
+  DATABASE_PASSWORD,
+  DATABASE_NAME,
+} = process.env;
 
 const sequelize = new Sequelize({
+  port: DATABASE_PORT,
   username: DATABASE_USER,
   password: DATABASE_PASSWORD,
   database: DATABASE_NAME,
@@ -52,6 +58,6 @@ UserRole.belongsToMany(User, {
   foreignKey: "UserRoleId",
   through: "UserRoleJoin",
 });
-User.hasOne(Orders)
-Orders.belongsTo(User)
+User.hasOne(Orders);
+Orders.belongsTo(User);
 export default sequelize;
