@@ -193,7 +193,12 @@ app.get("/debug/all_users", async function (req, res) {
 });
 
 app.get("/debug/corsOrigin", function (req, res) {
-  return res.json(process.env.CORS_ORIGIN);
+  const referer = req.headers.referer || req.headers.referrer;
+  const enlace = req.originalUrl || req.url;
+  return res.json({
+    ref: referer,
+    url: enlace,
+  });
 });
 
 app.use("/auth", authRoutes);
