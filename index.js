@@ -93,13 +93,13 @@ const { PORT } = process.env || 3001;
 async function initializeServer() {
   const syncUser = true;
 
-  const syncUserData = true
-  const syncProducts = true
-  const syncCategories = true
-  const syncProductsCategories = true
-  const syncUserRole = true
-  const syncUserRoleJoin = true
-  const syncOrder =true
+  const syncUserData = true;
+  const syncProducts = true;
+  const syncCategories = true;
+  const syncProductsCategories = true;
+  const syncUserRole = true;
+  const syncUserRoleJoin = true;
+  const syncOrder = true;
 
   try {
     await sequelize.authenticate();
@@ -190,6 +190,10 @@ app.get("/debug/all_users", async function (req, res) {
   });
 
   return res.json(result);
+});
+
+app.get("/debug/corsOrigin", function (req, res) {
+  return res.json(process.env.CORS_ORIGIN);
 });
 
 app.use("/auth", authRoutes);
