@@ -25,6 +25,7 @@ import {
   superAdminPermissions,
 } from "./src/config/server-config.js";
 import ordersRoutes from "./src/routes/ordersRoutes.js";
+import adminRoutes from "./src/routes/adminRoutes.js";
 config({ path: "./.env" });
 
 const app = express();
@@ -93,9 +94,9 @@ async function initializeServer() {
   const syncUser = true;
 
   const syncUserData = true;
-  const syncProducts = false;
-  const syncCategories = false;
-  const syncProductsCategories = false;
+  const syncProducts = true;
+  const syncCategories = true;
+  const syncProductsCategories = true;
   const syncUserRole = true;
   const syncUserRoleJoin = true;
   const syncOrder = true;
@@ -195,6 +196,7 @@ app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoriesRoutes);
 app.use("/orders", ordersRoutes);
+app.use("/admin", adminRoutes);
 
 initializeServer(true, true, true, true, true, true, true).then(function () {
   httpServer.listen(PORT, console.log(`Server running on port ${PORT}`));
