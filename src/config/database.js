@@ -7,6 +7,7 @@ import CreateCategoriesModel from "../models/Category.js";
 import ProductsCategoriesModel from "../models/ProductsCategories.js";
 import CreateUserRolesModel from "../models/User-Roles.js";
 import CreateUserRoleJoin from "../models/User-Role-Join.js";
+import CreateOrdersModel from "../models/Orders.js";
 config();
 
 const { SESSION_SECRET, DATABASE_USER, DATABASE_PASSWORD, DATABASE_NAME } =
@@ -27,6 +28,7 @@ CreateCategoriesModel(sequelize);
 ProductsCategoriesModel(sequelize);
 CreateUserRolesModel(sequelize);
 CreateUserRoleJoin(sequelize);
+CreateOrdersModel(sequelize);
 
 export const {
   User,
@@ -36,7 +38,10 @@ export const {
   ProductsCategories,
   UserRole,
   UserRoleJoin,
+  Orders,
 } = sequelize.models;
+
+console.log(sequelize.models);
 
 UserData.belongsTo(User);
 User.hasOne(UserData);
@@ -47,5 +52,6 @@ UserRole.belongsToMany(User, {
   foreignKey: "UserRoleId",
   through: "UserRoleJoin",
 });
-
+User.hasOne(Orders)
+Orders.belongsTo(User)
 export default sequelize;

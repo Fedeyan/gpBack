@@ -6,6 +6,7 @@ import { createServer } from "http";
 import cors from "cors";
 import sequelize, {
   Categories,
+  Orders,
   Products,
   ProductsCategories,
   User,
@@ -23,6 +24,7 @@ import {
   guestPermissions,
   superAdminPermissions,
 } from "./src/config/server-config.js";
+import ordersRoutes from "./src/routes/ordersRoutes.js";
 config({ path: "./.env" });
 
 const app = express();
@@ -88,13 +90,15 @@ const { PORT } = process.env;
 
 //-----start------------------------------------------------------
 async function initializeServer() {
-  const syncUser = false;
-  const syncUserData = false;
-  const syncProducts = false;
-  const syncCategories = false;
-  const syncProductsCategories = false;
-  const syncUserRole = false;
-  const syncUserRoleJoin = false;
+  const syncUser = true;
+
+  const syncUserData = true;
+  const syncProducts = true;
+  const syncCategories = true;
+  const syncProductsCategories = true;
+  const syncUserRole = true;
+  const syncUserRoleJoin = true;
+  const syncOrder = true;
 
   try {
     await sequelize.authenticate();
@@ -149,16 +153,22 @@ async function initializeServer() {
         permissions: superAdminPermissions.getPermissions(),
       });
     }
+
+    if (syncOrder) {
+      await Orders.sync({ force: syncOrder });
+    }
     const adminData = await UserData.create();
     const admin = await User.create({
       nombre: "Admin",
       contraseña: "Aezakmi11",
       correo: "developer.basilorien@gmail.com",
     });
-
     const adminRole = await UserRole.findOne({ where: { id: 2 } });
+    const adminOrder = await Orders.create();
+
     await admin.setUserRole(adminRole);
     await adminData.setUser(admin);
+    await admin.setOrder(adminOrder);
     console.log("bienvenido admin");
   } catch (error) {
     console.error("Error al sincronizar las tablas:", error);
@@ -181,11 +191,11 @@ app.get("/debug/all_users", async function (req, res) {
   return res.json(result);
 });
 
-
 app.use("/auth", authRoutes);
 app.use("/products", productRoutes);
 app.use("/categories", categoriesRoutes);
+app.use("/orders", ordersRoutes);
 
-initializeServer(true, true, true, true, true, true).then(function () {
+initializeServer(true, true, true, true, true, true, true).then(function () {
   httpServer.listen(PORT, console.log(`Server running on port ${PORT}`));
 });
