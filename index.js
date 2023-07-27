@@ -31,13 +31,14 @@ config({ path: "./.env" });
 const app = express();
 const httpServer = createServer(app, {
   cors: {
-    origin: process.env.CORS_ORIGIN,
+    origin: "https://gpback-production-8754.up.railway.app/",
+
     credentials: true,
   },
 });
 const io = socketIoService(httpServer, {
   cors: {
-    origin: process.env.CORS_ORIGIN,
+    origin: "https://gpback-production-8754.up.railway.app/",
     credentials: true,
   },
 });
@@ -54,7 +55,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: process.env.CORS_ORIGIN,
+    origin: "https://gpback-production-8754.up.railway.app/",
     credentials: true,
   })
 );

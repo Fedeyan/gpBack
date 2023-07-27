@@ -1,13 +1,13 @@
 import { config } from "dotenv";
 import { Server } from "socket.io";
-config()
+config();
 
 export default function socketIoService(server) {
-    const socketIoServer = new Server(server, {
-        cors: {
-            origin: process.env.CORS_ORIGIN,
-            credentials: true
-        }
-    })
-    return socketIoServer
+  const socketIoServer = new Server(server, {
+    cors: {
+      origin: "https://gpback-production-8754.up.railway.app/",
+      credentials: true,
+    },
+  });
+  return socketIoServer;
 }
