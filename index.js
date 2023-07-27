@@ -31,14 +31,13 @@ config({ path: "./.env" });
 const app = express();
 const httpServer = createServer(app, {
   cors: {
-    origin: "https://gpback-production-8754.up.railway.app/",
-
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
 });
 const io = socketIoService(httpServer, {
   cors: {
-    origin: "https://gpback-production-8754.up.railway.app/",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   },
 });
@@ -55,7 +54,7 @@ app.use(
 );
 app.use(
   cors({
-    origin: "https://gpback-production-8754.up.railway.app/",
+    origin: process.env.CORS_ORIGIN,
     credentials: true,
   })
 );
@@ -88,19 +87,19 @@ passport.deserializeUser(function (user, cb) {
 
 //----------------------routes--------------------------
 
-const { PORT } = process.env;
+const { PORT } = process.env || 3001;
 
 //-----start------------------------------------------------------
 async function initializeServer() {
   const syncUser = true;
 
-  const syncUserData = true;
-  const syncProducts = true;
-  const syncCategories = true;
-  const syncProductsCategories = true;
-  const syncUserRole = true;
-  const syncUserRoleJoin = true;
-  const syncOrder = true;
+  const syncUserData = true
+  const syncProducts = true
+  const syncCategories = true
+  const syncProductsCategories = true
+  const syncUserRole = true
+  const syncUserRoleJoin = true
+  const syncOrder =true
 
   try {
     await sequelize.authenticate();

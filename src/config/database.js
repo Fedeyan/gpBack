@@ -10,21 +10,17 @@ import CreateUserRoleJoin from "../models/User-Role-Join.js";
 import CreateOrdersModel from "../models/Orders.js";
 config();
 
-const {
-  SESSION_SECRET,
-  DATABASE_PORT,
-  DATABASE_USER,
-  DATABASE_PASSWORD,
-  DATABASE_NAME,
-} = process.env;
-
-const sequelize = new Sequelize(
-  "postgresql://postgres:N57Mx4eYrUjw0KaPmU7k@containers-us-west-36.railway.app:7333/railway",
-  {
-    dialect: "postgres",
-    logging: false,
-  }
-);
+const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
+const URL = `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?options=project%3D${ENDPOINT_ID}`;
+const sequelize = new Sequelize(URL, {
+  dialect: "postgres",
+  logging: false,
+  dialectOptions: {
+    ssl: {
+      require: true,
+    },
+  },
+});
 
 CreateUserModel(sequelize);
 CreateUserdataModel(sequelize);
