@@ -195,6 +195,7 @@ app.get("/debug/all_users", async function (req, res) {
 app.get("/debug/corsOrigin", function (req, res) {
   const referer = req.headers.referer || req.headers.referrer;
   const enlace = req.originalUrl || req.url;
+  console.log(referer, enlace);
   return res.json({
     ref: referer,
     url: enlace,
