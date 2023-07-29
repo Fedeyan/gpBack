@@ -2,6 +2,7 @@ import { validationResult } from "express-validator";
 import { Orders, Products, User } from "../config/database.js";
 import { httpResponse } from "../config/server-config.js";
 import { Op } from "sequelize";
+
 export async function addProductToOrder(req, res) {
   try {
     const errors = validationResult(req);
@@ -80,7 +81,38 @@ export async function getOrder(req, res) {
       };
     });
 
-    return res.json({ status: order.status, products });
+    return res.json({
+      asked: order.asked,
+      status: order.status,
+      products,
+    });
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
+export async function sendOrder(req, res) {
+  try {
+    const order = await Orders.findOne({
+      where: {
+        UserId: req?.user?.id,
+      },
+    });
+
+    if (!order) {
+      console.error("Revisa el controlador de ordenes. linea 99");
+      return res
+        .status(500)
+        .json(
+          httpResponse(false, null, "Se produjo un error. Reintenta más tarde.")
+        );
+    }
+    await order.update({
+      asked: true,
+    });
+
+    req.io.emit("sendOrder")
+    return res.json(httpResponse(true, "Tu pedido se ha enviado con exito."));
   } catch (error) {
     throw new Error(error);
   }
