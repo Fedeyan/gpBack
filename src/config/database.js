@@ -12,14 +12,14 @@ config();
 
 const { PGHOST, PGDATABASE, PGUSER, PGPASSWORD, ENDPOINT_ID } = process.env;
 const URL = `postgres://${PGUSER}:${PGPASSWORD}@${PGHOST}/${PGDATABASE}?options=project%3D${ENDPOINT_ID}`;
-const sequelize = new Sequelize(process.env.DEV_DATABASE, {
+const sequelize = new Sequelize(URL, {
   dialect: "postgres",
   logging: false,
-  // dialectOptions: {
-  //   ssl: {
-  //     require: true,
-  //   },
-  // },
+  dialectOptions: {
+    ssl: {
+      require: true,
+    },
+  },
 });
 
 CreateUserModel(sequelize);
