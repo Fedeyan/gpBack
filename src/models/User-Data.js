@@ -10,6 +10,12 @@ const CreateUserdataModel = (sequelize) => {
       type: DataTypes.INTEGER,
       defaultValue: null,
     },
+    alerts: {
+      type: DataTypes.ARRAY(DataTypes.JSON),
+      defaultValue: [
+        { title: "Titulo", content: "contenido", status: "estado" },
+      ],
+    },
   });
   return UserData;
 };
